@@ -1,0 +1,75 @@
+# Powershell Basics
+
+## Lab Overview
+Brief explanation of what this lab covers.
+
+## Objectives
+- Understand how Powershell differs from Command-Line
+- Identify fundamental 'cmdlets'
+- Learn how Powershell manipulates objects
+
+## Key Concepts
+
+| cmdlets | built-in Powershell commands formated as verb-noun, that return .NET objects |
+| Get-Content | cmdlet that tells Windows to read the content of an items, pulls text into Powershell for inspection |
+| Set-Location | changes the current workingn location similar to 'cd' in CLI |
+| CommandInfo | object type that stores 'metadata' about a command, such as the commands name and type |
+| -CommandType | paramenter used with Get-Command to filters commands based on what kind of command they are |
+| Get-Help | Provides information about a given command |
+| Get-Alias| Used in conjunction with an alias to find 'to which commmand it maps |
+| Get-Childitem | lists the items inside a location, similar to 'dir' in CLI |
+| Find-Module | searches a registered Powershell repository for 'modules matching a criteria' |
+| -Name | common paramenter used to tell a cmdlet which item,command,module,service,alias, property is being searched |
+| Function | script-based command written in Powershell syntax |
+
+## Environment
+
+Platform: TryHackMe  
+Operating System: Windows Server  
+Instance: Windows Powershell
+
+## Lab Walkthrough
+
+### Syntax: Get-Command -Commandtype "Function"
+
+PS C:\Users\captain> Get-Command -CommandType "Function"
+
+CommandType     Name                                               Version    Source                                                                                                                                     
+-----------     ----                                               -------    ------
+Function        A:
+Function        Add-BCDataCacheExtension                           1.0.0.0    BranchCache
+Function        Add-DnsClientDohServerAddress                      1.0.0.0    DnsClient
+Function        Add-DnsClientNrptRule                              1.0.0.0    DnsClient
+[...]
+
+- lists all commands with the Command type "Function"
+- each row is an available function
+- Version(the version of the module the command comes from)
+- Source(the module that provided the function)
+
+### Syntax: Find-Module -Name "Powershell"
+
+PS C:\Users\captain> Find-Module -Name "PowerShell*"   
+
+Version    Name                                Repository           Description 
+-------    ----                                ----------           ----------- 
+0.4.7      powershell-yaml                     PSGallery            Powershell module for serializing and deserializing YAML
+
+2.2.5      PowerShellGet                       PSGallery            PowerShell module with commands for discovering, installing, updating and publishing the PowerShell artifacts like Modules, DSC Resources, Role Capabilities and Scripts.                                                   
+1.0.80.0   PowerShell.Module.InvokeWinGet      PSGallery            Module to Invoke WinGet and parse the output in PSOjects
+
+0.17.0     PowerShellForGitHub                 PSGallery            PowerShell wrapper for GitHub API  
+
+- Find-Module function searched a repository called PSGallery for 'modules whose name starts with Powershell'
+- found (4) matching modules
+- Version(the available version of the module)
+- Name(module name)
+- Repository(where Powershell found the module)
+- Description(short description of what the module does)
+
+## Security Relevance
+- cybersecurity uses Powershell for administration, triage and automation
+- attackers may use Powershell for execution of malware and discovery
+- Powershell abuse is a known technique in MITRE ATT&CK
+- Powershell should be configured and monitored as part of any security posture
+
