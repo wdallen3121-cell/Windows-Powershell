@@ -1,0 +1,97 @@
+# Navigating Filesystems in Powershell
+
+## Lab Overview
+This lab will cover how to manipulate filesystems using cmdlets
+
+- Understand how Powershell is different from CLI, even though it shares some simularities.
+- Identify the main cmdlets used by IT professionals for working with filesystems
+- Learn how this aspect of Powershell relates to cybersecurity
+
+## Key Concepts
+
+| Get-ChildItem | lists items inside a location. Can work with folders, file systems, registries or certificate stores |
+| -Path | Paramenter. signals a specific path or location |
+| Set-Location | cmdlet used to move to a different location on the system |
+| New-Item | creates a new item(such as a file, directory or registry) and allows user to set its value |
+| Remove-Item | deletes items(such as folders, registry keys, variables, aliases and functions)
+
+## Environment
+
+Platform: TryHackMe  
+Operating System: Windows Server 2019
+Instance: Windows Powershell
+
+## Lab Walkthrough
+
+### Syntax: Get-ChildItem
+PS C:\Users\example> Get-ChildItem 
+
+    Directory: C:\Users\example
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-r---          5/8/2021   9:15 AM                Desktop
+d-r---          9/4/2024  10:58 AM                Documents
+d-r---          5/8/2021   9:15 AM                Downloads
+d-r---          5/8/2021   9:15 AM                Favorites
+d-r---          5/8/2021   9:15 AM                Links
+d-r---          5/8/2021   9:15 AM                Music
+d-r---          5/8/2021   9:15 AM                Pictures
+d-----          5/8/2021   9:15 AM                Saved Games
+d-r---          5/8/2021   9:15 AM                Videos
+- Mode(Shows item type and attributes)
+- d(directory/folder)
+- r(read-only attribute, cannont be edited, overwritten or deleted)
+- LastWriteTime(last time the folder was modified)
+- Length(the size of file, folders do not show bytes)
+
+### Syntax: Set-Location
+
+PS C:\Users\example> Set-Location -Path ".\Documents"
+PS C:\Users\example\Documents> 
+- changed location from C:\Users\example to C:\Users\example\Documents
+- Set-Location(changes where the session is pointed)
+- Path(signals a specific location)
+- .\Documents(how the Documents folder is designated in Powershell)
+
+### Syntax: New-Item -Path ".\captain-cabin\captain-wardrobe" -ItemType "Directory"
+
+PS C:\Users\captain\Documents> New-Item -Path ".\captain-cabin\captain-wardrobe" -ItemType "Directory"
+
+    Directory: C:\Users\captain\Documents\captain-cabin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----          9/4/2024  12:20 PM                captain-wardrobe
+
+### Syntax: New-Item -Path ".\captain-cabin\captain-wardrobe\captain-boots.txt" -ItemType "File"  
+
+PS C:\Users\captain\Documents> New-Item -Path ".\captain-cabin\captain-wardrobe\captain-boots.txt" -ItemType "File"     
+
+    Directory: C:\Users\captain\Documents\captain-cabin\captain-wardrobe
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          9/4/2024  11:46 AM              0 captain-boots.txt
+- created a new folder named "captain-wardrobe" inside C:\Users\example\Documents\captain-cabin
+- Itemtype "Directory"(the new item is a folder)
+- created a new item called "captain-boots.txt" within a folder named captain-cabin
+
+### Syntax: Remove-Item -Path ".\captain-cabin\captain-wardrobe\captain-boots.txt"
+
+PS C:\Users\captain\Documents> Remove-Item -Path ".\captain-cabin\captain-wardrobe\captain-boots.txt"
+PS C:\Users\captain\Documents> Remove-Item -Path ".\captain-cabin\captain-wardrobe" 
+- removed file named captain-boots.txt
+- removed folder named captain-wardrobe.txt
+- when the item was removed, there was no output
+- removing an item that holds items init may require "-Recurse"
+
+### Syntax: Get-Content -Path ".\captain-hat.txt"
+
+PS C:\Users\captain\Documents\captain-cabin> Get-Content -Path ".\captain-hat.txt"
+
+## Security Relevance
+- filesystems can be seen as a layer of investigation or possible abuse
+- these basic commands are used by by both attacker and defenders for inspection, creation, modifiation and removal
+- Get-Childitem can be used as a discovery tool for the presents of suspicious items
+- Set-Location is common tool for navigation. Allows quick traversal through folders and logs
