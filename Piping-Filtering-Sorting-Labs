@@ -1,0 +1,122 @@
+Piping, Filtering and Sorting Data
+
+## Lab Overview
+This lab will cover the basics of Piping, Filtering and Sorting in Powershell
+
+### Objectives
+- Understand the mechanics behind Piping and it's various uses
+- Identify fundemental cmdlets and commands that can be used to make searching through data an easier task
+- Learn how piping, filtering, sorting is used by IT professoinals for analysis
+
+## Key Concepts
+
+| Piping | use of the pipe operator "|". sends objects produced from onecommand through another command. |
+| Objects | Representations of items or 'states' in Powershell |
+| Sort-Object | sorts objecs in ascending or descending order. Based on object 'property values'(name, length, status) |
+| Length | Object property, commonly meaning 'size of a file in bytes'.
+| Where-Object | Filters objects in Powershell. Selects 'objects that have particular property values'(from a collection of objects passed to it) |
+| Extension | file property sucha as .txt, .log, .ps1. Can be used as a way to filter data |
+| -eq | Comparison operator. Can test whether (2) values are equal. Can be used in conjunction with where-object as a form of filter |
+| -ne | Comaprison operator. Tests whether (2) values are not-equal. Helpful for status filtering |
+| -gt | Comparison operator. Tests whether (1) object is greater than another object. Helpful for size filtering |
+| -lt | Comaprison operator. Tests whether the left-hand object is less than another object. Helpful for sorting data by date |
+| -le | Comparison operator. tests whether the left-hand object is less than or equal to antoher object. Can be used for data sorting or size filtering. |
+| -like | Checks whether 'something' matches a pattern. usually with * as a wildcard |
+| Select-String | search command(for text). Similar to 'grep' in Linux. Useful for searching logs, configs, scripts and output of other commands |
+| Select-Object | the objects returned will only show the specific properties designated after the command |
+
+## Environment
+
+Platform: TryHackMe  
+Operating System: Windows Server  
+Instance: Powershell
+
+## Lab Walkthrough
+
+### Syntax: Get-ChildItem | Sort-Object Length
+
+PS C:\Users\captain\Documents\captain-cabin> Get-ChildItem | Sort-Object Length
+
+    Directory: C:\Users\captain\Documents\captain-cabin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          9/4/2024  12:50 PM              0 captain-boots.txt
+-a----          9/4/2024  12:14 PM            264 captain-hat2.txt
+-a----          9/4/2024  12:14 PM            264 captain-hat.txt
+-a----          9/4/2024  12:37 PM           2116 ship-flag.txt
+d-----          9/4/2024  12:50 PM                captain-wardrobe
+
+- presented all items inside the captain-cabin folder
+- sorted the contents of this folder based on the length(in bytes) of each .txt file
+- sorted smallest to largest
+- "-a----" means file
+- "d-----" means directory
+- typing -descending at the end of the command line would sort the files starting with the largest
+
+### Syntax: Get-ChildItem | Where-Object -Property "Extension" -eq ".txt" 
+
+PS C:\Users\captain\Documents\captain-cabin> Get-ChildItem | Where-Object -Property "Extension" -eq ".txt" 
+
+    Directory: C:\Users\captain\Documents\captain-cabin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          9/4/2024  12:50 PM              0 captain-boots.txt
+-a----          9/4/2024  12:14 PM            264 captain-hat.txt
+-a----          9/4/2024  12:14 PM            264 captain-hat2.txt
+-a----          9/4/2024  12:37 PM           2116 ship-flag.txt
+
+- retrieved the items in the captain-cabin folder
+- kept only the items that had the file extension ".txt"
+
+### Syntax: Get-ChildItem | Where-Object -Property "Name" -like "ship*"  
+
+PS C:\Users\captain\Documents\captain-cabin> Get-ChildItem | Where-Object -Property "Name" -like "ship*"  
+
+    Directory: C:\Users\captain\Documents\captain-cabin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          9/4/2024  12:37 PM           2116 ship-flag.txt
+
+- retrieved the contents of the folder
+- kept only the items whose 'Name' property matched the pattern "ship*"
+- the wildcard "*" meant that as long as the first part of the Name was "ship" any item woul be part of the collection
+
+### Syntax: Get-ChildItem | Select-Object Name,Length 
+
+PS C:\Users\captain\Documents\captain-cabin> Get-ChildItem | Select-Object Name,Length 
+
+Name              Length
+----              ------
+captain-wardrobe
+captain-boots.txt 0
+captain-hat.txt   264
+captain-hat2.txt  264
+ship-flag.txt     2116
+
+- retrieved items from the folder
+- only showed the Name and Length properties as part of the data set
+
+### Syntax: Select-String -Path ".\captain-hat.txt" -Pattern "hat" 
+
+PS C:\Users\captain\Documents\captain-cabin> Select-String -Path ".\captain-hat.txt" -Pattern "hat" 
+
+captain-hat.txt:8:Don't touch my hat!
+
+- searched the file captain-hat.txt for the text pattern "hat"(within the .txt. file)
+- returned the line number the match was found
+- returned the contents of the line that contained the match
+
+## Security Relevance
+- Security work requires searching through a LOT of system, network, user, process and log data
+- Being able to isolate important data and read it quickly is critical to good defense work
+  - failed logins
+  - .ps1 scripts
+  - files larger than an expected size
+  - files with a known malicious name
+  - connections in certain state
+    - may be hard to find if data is not organized/isolated, due to volume of data logs
+- valuable for threat hunting/malware investigation
+
