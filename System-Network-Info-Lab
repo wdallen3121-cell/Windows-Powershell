@@ -1,0 +1,126 @@
+# System and Network Information
+
+## Lab Overview
+
+## Objectives
+
+- Understand
+- Identify
+- Learn
+
+
+## Key Concepts
+
+| Get-Computer-Info |
+| systeminfo |
+| Get-LocalUser |
+| Get-NetIPConfiguration |
+| Get-NetIPAddress |
+| WindowsBuildLabEx |
+| WindowsCurrentVersion |
+| WindowsEditionID |
+| WindowsInstalltion Type |
+| WindowsInstallDateFromRegistry |
+| WindowsProductID |
+| WindowsProductName |
+| Get-LocalUser |
+| Administrator |
+| DefaultAccount |
+| WDAGUtilityAccount |
+| InterfaceAlias |
+| InfterfaceIndex |
+| Netprofile.Name |
+| AddressFamily |
+| Type |
+| Prefixlength |
+| PrefixOrigin |
+| Suffix Origin |
+| AddressState |
+| ValidLifetime |
+| PreferredLifetime |
+| SkipAsSource |
+| PolicyStore |
+
+## Environment
+
+Platform: TryHackMe  
+Operating System: Windows Server 2019
+Instance: Windows Powreshell  
+
+## Lab Walkthrough
+
+### Syntax: Get-ComputerInfo
+
+PS C:\Users\captain> Get-ComputerInfo
+
+WindowsBuildLabEx                                       : 20348.859.amd64fre.fe_release_svc_prod2.220707-1832
+WindowsCurrentVersion                                   : 6.3
+WindowsEditionId                                        : ServerDatacenter
+WindowsInstallationType                                 : Server Core
+WindowsInstallDateFromRegistry                          : 4/23/2024 6:36:29 PM
+WindowsProductId                                        : 00454-60000-00001-AA763
+WindowsProductName                                      : Windows Server 2022 Datacenter
+[...]
+
+### Syntax: Get-LocalUser
+
+PS C:\Users\captain> Get-LocalUser
+
+Name               Enabled Description 
+----               ------- -----------
+Administrator      True    Built-in account for administering the computer/domain
+captain            True    The beloved captain of this pirate ship.
+DefaultAccount     False   A user account managed by the system.
+Guest              False   Built-in account for guest access to the computer/domain
+WDAGUtilityAccount False   A user account managed and used by the system for Windows Defender Application Guard scenarios.
+
+### Syntax: Get-NetIPConfiguration
+
+PS C:\Users\captain> Get-NetIPConfiguration
+
+InterfaceAlias       : Ethernet
+InterfaceIndex       : 5
+InterfaceDescription : Amazon Elastic Network Adapter
+NetProfile.Name      : Network 3
+IPv4Address          : 10.10.178.209
+IPv6DefaultGateway   :
+IPv4DefaultGateway   : 10.10.0.1
+DNSServer            : 10.0.0.2
+
+### Syntax: Get-NetIPAddress
+
+PS C:\Users\captain> Get-NetIPAddress
+
+IPAddress         : fe80::3fef:360c:304:64e%5
+InterfaceIndex    : 5
+InterfaceAlias    : Ethernet
+AddressFamily     : IPv6
+Type              : Unicast
+PrefixLength      : 64
+PrefixOrigin      : WellKnown
+SuffixOrigin      : Link
+AddressState      : Preferred
+ValidLifetime     : Infinite ([TimeSpan]::MaxValue)
+PreferredLifetime : Infinite ([TimeSpan]::MaxValue)
+SkipAsSource      : False
+PolicyStore       : ActiveStore
+
+IPAddress         : ::1
+InterfaceIndex    : 1
+InterfaceAlias    : Loopback Pseudo-Interface 1
+AddressFamily     : IPv6
+[...]
+
+IPAddress         : 10.10.178.209
+InterfaceIndex    : 5
+InterfaceAlias    : Ethernet
+AddressFamily     : IPv4
+[...]
+
+IPAddress         : 127.0.0.1
+InterfaceIndex    : 1
+InterfaceAlias    : Loopback Pseudo-Interface 1
+AddressFamily     : IPv4
+[...]
+
+## Security Relevance
