@@ -1,50 +1,49 @@
 # System and Network Information
 
 ## Lab Overview
+Using fundamental commands to present System and Network data
 
 ## Objectives
 
-- Understand
-- Identify
-- Learn
+- Understand the different types of information that displayed through these commands
+- Identify the information that will be critical for diagnosing network health
+- Learn how these Powershell capabilities are used to maintain/increase the security of networks
 
 
 ## Key Concepts
 
-| Get-Computer-Info |
-| systeminfo |
-| Get-LocalUser |
-| Get-NetIPConfiguration |
-| Get-NetIPAddress |
-| WindowsBuildLabEx |
-| WindowsCurrentVersion |
-| WindowsEditionID |
-| WindowsInstalltion Type |
-| WindowsInstallDateFromRegistry |
-| WindowsProductID |
-| WindowsProductName |
-| Get-LocalUser |
-| Administrator |
-| DefaultAccount |
-| WDAGUtilityAccount |
-| InterfaceAlias |
-| InfterfaceIndex |
-| Netprofile.Name |
-| AddressFamily |
-| Type |
-| Prefixlength |
-| PrefixOrigin |
-| Suffix Origin |
-| AddressState |
-| ValidLifetime |
-| PreferredLifetime |
-| SkipAsSource |
-| PolicyStore |
+| Get-Computer-Info | displays detailed informatoin about the computer and OS |
+| Get-LocalUser | shows the local user accounts on a computer. Provides such things as account names, descriptions and last password set time | 
+| Get-NetIPConfiguration | shows the computer's network IP configuration. Lists information such as IP address, default gateway and DNS Server. similar to ipconfig in CLI |
+| Get-NetIPAddress | shows the IP address assigned to network interfaces on the system. Focuses on the IPv4 and IPv6 address |
+| WindowsBuildLabEx | property in Powershell. Lists build number(Windows 10,11), branch/lab infor and internal Microsoft build label |
+| WindowsCurrentVersion | property of Get-ComputerInfo cmdlet. Shows the system current version info: Windows version, OSVersion, OSbuildnumber |
+| WindowsEditionID |  details 'the edition of Windows isntalled on a machine, such as: Professional, Core, Enterprise, Education or Server |
+| WindowsInstalltionType | details the kind of Windows Installation a system is using. Whether the system is a Client or Server |
+| WindowsInstallDateFromRegistry | reports the date Windows was installed/re-installed/taken from the Windows registry |
+| WindowsProductID | identifier for the installed Windows product, as recorded in the registry |
+| WindowsProductName | Human-readable Windows name, such as: Windows 11 Pro or Windows 10 Enterprise |
+| Administrator | built-in local admin account on Windows. Has elevated privileges compared to normal user |
+| DefaultAccount | built-in local Windows account. System-managed account called DSMA(Default System Managed Account). Used for processes that are user-neutral or mult-user aware. Disabled by default |
+| WDAGUtilityAccount | built-in local Windows System account tied to Microsoft Defender Application Gaurd. Disabled by default, uless Application Guard is enabled. Used to sign into Application Guard container |
+| InterfaceAlias | Alias/name for a network interface, such as: Wi-Fi or Ethernet |
+| InfterfaceIndex | numeric index identifier for a network interface |
+| Netprofile.Name | 'Name' property inside the 'NetProfile' portion of Get-NetIPConfiguration output. Network connectoin profile name associated with the adapter.
+| AddressFamily | details which IP version an address belongs to IPv4 or IPv6 |
+| Type | IP address type(for a NetIPAddress object). Either Unicast or Anycast. Default is Unicast. Unicast is assigned to one interface/host. Anycast address can be assigned to multipe possible receivers |
+| Prefixlength | subnet mask(written as a slash number). Specifies the subnet mask for an IP address.
+| PrefixOrigin | details where the network subnet/prefix for an IP address comes. Whether thhe IP address was manually configured, DHCP, Router Advertised, built-in or other source |
+| SuffixOrigin | details where the host portion of an IP address comes from. Valued from(0-5) similar to PrefixOrigin | 
+| AddressState | states the current usability state of an IP address. Whether Invalid, Tentative, Duplicate, Deprecated, Preferred |
+| ValidLifetime | states the length of time an IP address will remain valid |
+| PreferredLifetime | sates the length of time an IP address will be 'preferred for new connections'. The address may still be valid, just not the preferred |
+| SkipAsSource | true/false property. States whether an IP address shoudl be used as a source address for outgoing traffic. If True, the address will NOT be used for outgoing traffic and not be registered in DNS |
+| PolicyStore | states which Window Policy/configuration store an IP setting is associated with. Whether ActiveStore(setting is active) or PersistentStore(settings are saved to survive restart) |
 
 ## Environment
 
 Platform: TryHackMe  
-Operating System: Windows Server 2019
+Operating System: Windows Server 2022
 Instance: Windows Powreshell  
 
 ## Lab Walkthrough
@@ -62,6 +61,10 @@ WindowsProductId                                        : 00454-60000-00001-AA76
 WindowsProductName                                      : Windows Server 2022 Datacenter
 [...]
 
+- details that the system is runing Windows server 2022 
+- amd64(the system is a (64-bit system)
+- the WIndowsInstallationType is Server Core(this machine was made to be managed through reomte administration/command linen tools
+
 ### Syntax: Get-LocalUser
 
 PS C:\Users\captain> Get-LocalUser
@@ -73,6 +76,9 @@ captain            True    The beloved captain of this pirate ship.
 DefaultAccount     False   A user account managed by the system.
 Guest              False   Built-in account for guest access to the computer/domain
 WDAGUtilityAccount False   A user account managed and used by the system for Windows Defender Application Guard scenarios.
+
+- shows there are (5) local accounts on the machine
+- (2) of the acounts are enalbed. Admin and Captain 
 
 ### Syntax: Get-NetIPConfiguration
 
@@ -86,6 +92,10 @@ IPv4Address          : 10.10.178.209
 IPv6DefaultGateway   :
 IPv4DefaultGateway   : 10.10.0.1
 DNSServer            : 10.0.0.2
+
+- Server is using an Ethernet Adapter
+- machine is using an Amazon virtual network adapter(running in AWS/Amazon EC2)
+- if server wants to reach systems outside its subnet it sends traffic to 10.10.0.1
 
 ### Syntax: Get-NetIPAddress
 
@@ -123,4 +133,13 @@ InterfaceAlias    : Loopback Pseudo-Interface 1
 AddressFamily     : IPv4
 [...]
 
+- details (4) address entries
+- ValidLifetime and PreferredLifetime are Infinite
+- IPv6 address will be used as a source IP address
+- ::1 is the IPv6 loopback address(similar to 127.0.0.1) allows the machine to 'talk' to itself
+
 ## Security Relevance
+- the cmdlets allow me to identify hosts
+- Get-Computerinfo is the main tool for identifying hosts and gaining system context.
+- Get-LocalUser can be used for overall account review and checking which accounts have privileged access
+- networking cmdlets can be focused to reduce noise by piping these cmdlets through others such as Where-Object, Sort-Object and Select-Object
